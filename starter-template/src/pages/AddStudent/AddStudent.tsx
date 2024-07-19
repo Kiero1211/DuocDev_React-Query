@@ -2,7 +2,8 @@ import { useMatch } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { addStudent } from "apis/students.api";
 import { Student } from "types/students.type";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { isAxiosError } from "utils/utils";
 
 type FormStateType = Omit<Student, "id">;
 const initialFormState: FormStateType = {
@@ -15,13 +16,17 @@ const initialFormState: FormStateType = {
   btc_address: "",
 }
 
+type FormError = {
+  [key in keyof FormStateType] : string
+} | null;
+
 
 export default function AddStudent() {
   const [formState, setFormState] = useState<FormStateType>(initialFormState);
   const match = useMatch("/students/add");
   const isAddMode = Boolean(match);
 
-  const {mutate} = useMutation({
+  const {mutate, mutateAsync, error, data, reset} = useMutation({
     mutationFn: (body: FormStateType ) => {
       return addStudent(body);
     }
@@ -29,12 +34,29 @@ export default function AddStudent() {
 
   const handleChange = (name: keyof FormStateType) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormState(prev => ({...prev, [name]: event.target.value}));
+
+    if (error || data) {
+      reset();
+    }
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutate(formState);
+    try {
+      const data = await mutateAsync(formState);
+      console.log("data", data);
+      setFormState(initialFormState);
+    } catch (error) {
+      console.log("Error: ", error);
+    }
   }
+
+  const errorForm: FormError = useMemo(() => {
+    if (isAxiosError<{error: FormError}>(error) && error.response?.status === 422) {
+      return error.response.data.error;
+    } 
+    return null;
+  }, [error])
 
   return (
     <div>
@@ -42,7 +64,7 @@ export default function AddStudent() {
       <form className='mt-6' onSubmit={handleSubmit}>
         <div className='group relative z-0 mb-6 w-full'>
           <input
-            type='email'
+            type='text'
             name='floating_email'
             id='floating_email'
             className='peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 
@@ -61,6 +83,13 @@ export default function AddStudent() {
           >
             Email address
           </label>
+
+          {errorForm && (
+            <p className="mt-2 text-sm text-red-600">
+              <span className="font-medium">[Error] </span> 
+              {errorForm.email}
+            </p>
+          )}
         </div>
 
         <div className='group relative z-0 mb-6 w-full'>
