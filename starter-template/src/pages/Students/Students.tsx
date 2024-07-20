@@ -1,8 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { getStudents, deleteStudent } from "apis/students.api";
+import { getStudents, deleteStudent, getStudent } from "apis/students.api";
 import { StudentList } from "types/students.type";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { useQueryStrings } from "utils/utils";
 import classNames from "classnames";
@@ -12,20 +12,12 @@ import { toast } from "react-toastify";
 const PAGE_LIMIT = 10;
 
 export default function Students() {
-    // useEffect(() => {
-    //     setIsLoading(true);
-    //     getStudents()
-    //         .then((res) => {
-    //             setStudentList(res.data);
-    //         })
-    //         .finally(() => setIsLoading(false));
-    // }, []);
-
+    const queryClient = useQueryClient();
     const queryString: { page?: string } = useQueryStrings();
     const page = Number(queryString.page) || 1;
 
     const { data: studentList, isLoading } = useQuery({
-        queryKey: ["student", page],
+        queryKey: ["studentPage", page],
         queryFn: () => getStudents(page),
         placeholderData: keepPreviousData,
     });
@@ -34,8 +26,19 @@ export default function Students() {
     const totalPages = Math.ceil(totalStudentCount / PAGE_LIMIT);
 
     const deleteStudentMutation = useMutation({
-        mutationFn: (id: string | number) => deleteStudent(id),
+        mutationFn: async (id: string | number) => {
+            await deleteStudent(id);
+            queryClient.invalidateQueries({queryKey: ["student", page], exact: true})
+        }
     })
+
+    const handlePrefetchStudent = async (id: string) => {
+        await queryClient.prefetchQuery({
+            queryKey: ["students", id],
+            queryFn: () => getStudent(id as string),
+            staleTime: 1000 * 10,
+        })
+    }
 
     const handleDelete = async (id: string | number) => {
         try {
@@ -109,6 +112,7 @@ export default function Students() {
                                     <tr
                                         key={index}
                                         className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+                                        onMouseEnter={() => handlePrefetchStudent(student.id)}
                                     >
                                         <td className="py-4 px-6">
                                             {student.id}
