@@ -1,16 +1,18 @@
-import { useMatch } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { addStudent } from "apis/students.api";
+import { useMatch, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { addStudent, updateStudent } from "apis/students.api";
 import { Student } from "types/students.type";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { isAxiosError } from "utils/utils";
+import { getStudent } from "apis/students.api";
+import { toast } from "react-toastify";
 
-type FormStateType = Omit<Student, "id">;
+type FormStateType = Omit<Student, "id"> | Student;
 const initialFormState: FormStateType = {
   first_name: "",
   last_name: "",
   email: "",
-  gender: "other",
+  gender: "Other",
   country: "",
   avatar: "",
   btc_address: "",
@@ -25,38 +27,67 @@ export default function AddStudent() {
   const [formState, setFormState] = useState<FormStateType>(initialFormState);
   const match = useMatch("/students/add");
   const isAddMode = Boolean(match);
+  const {id} = useParams();
 
-  const {mutate, mutateAsync, error, data, reset} = useMutation({
+  const {data: studentData, isLoading} = useQuery({
+    queryKey: ["students", id],
+    queryFn: () => getStudent(id as string),
+    enabled: id !== undefined,
+  })
+
+  
+  useEffect(() => {
+    if (studentData?.status === 200) {
+      setFormState(studentData.data)
+    }
+  }, [studentData])
+  
+
+  const addStudentMutation = useMutation({
     mutationFn: (body: FormStateType ) => {
       return addStudent(body);
     }
   })
+  
+  const updateStudentMutation = useMutation({
+    mutationFn: (_) => updateStudent(id as string, formState as Student)
+  })
 
   const handleChange = (name: keyof FormStateType) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormState(prev => ({...prev, [name]: event.target.value}));
-
-    if (error || data) {
-      reset();
+    console.log(formState);
+    
+    if (addStudentMutation.error || addStudentMutation.data) {
+      addStudentMutation.reset();
     }
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const data = await mutateAsync(formState);
-      console.log("data", data);
-      setFormState(initialFormState);
+      if (isAddMode) {
+        const formData = await addStudentMutation.mutateAsync(formState);
+        console.log("[Added student]: ", formData);
+        toast.success("Student added successfully")
+      }
+      const updatedData = await updateStudentMutation.mutateAsync();
+      console.log("[Updated student]: ", updatedData);
+      toast.success("Student updated successfully");
     } catch (error) {
+      const errorToastMessage = isAddMode ? "Failed to add student" : "Failed to edit student";
       console.log("Error: ", error);
+      toast.error(errorToastMessage);
     }
   }
 
   const errorForm: FormError = useMemo(() => {
+    const error = isAddMode ? addStudentMutation.error : updateStudentMutation.error;
+
     if (isAxiosError<{error: FormError}>(error) && error.response?.status === 422) {
       return error.response.data.error;
     } 
     return null;
-  }, [error])
+  }, [addStudentMutation.error, updateStudentMutation.error, isAddMode])
 
   return (
     <div>
@@ -102,8 +133,9 @@ export default function AddStudent() {
                   name='gender'
                   className='h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 
                   dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
-                  value="male"
+                  value="Male"
                   onChange={handleChange("gender")}
+                  checked={formState.gender === "Male"}
                 />
                 <label htmlFor='gender-1' className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
                   Male
@@ -116,8 +148,9 @@ export default function AddStudent() {
                   name='gender'
                   className='h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 
                   dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
-                  value="female"
+                  value="Female"
                   onChange={handleChange("gender")}
+                  checked={formState.gender === "Female"}
                 />
                 <label htmlFor='gender-2' className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
                   Female
@@ -130,8 +163,9 @@ export default function AddStudent() {
                   name='gender'
                   className='h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 
                   dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
-                  value="other"
+                  value="Other"
                   onChange={handleChange("gender")}
+                  checked={formState.gender === "Other"}
                 />
                 <label htmlFor='gender-3' className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
                   Other
@@ -260,7 +294,7 @@ export default function AddStudent() {
           className='w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 
           focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto'
         >
-          Submit
+          {isAddMode ? "Add" : "Update"}
         </button>
       </form>
     </div>

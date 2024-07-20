@@ -14,8 +14,8 @@
       "id": 2,
       "first_name": "Sherilyn",
       "last_name": "Paddon",
-      "email": "spaddon1@washington.edu",
-      "gender": "Female",
+      "email": "spaddon111@washington.edu",
+      "gender": "Male",
       "country": "Cameroon",
       "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIsSURBVDjLpZPNbhJRFMf/w9fwNUiVlZWPncSmqemm7FjZaGJcsdCkS17AJ8AH6BvU6BKfgFIXLqArTQngSoPUDSGEhAUCLQN3xnPOMLSJGBdOcnK45J7f+Z//vVezbRv/8/luLxqNxvvlcnm0WCx8lEFZwjRNzh8KhcKrjYBWq3WHCt7G4/GCrocxpyJYFkQbKdzaiuPs7PQlrf4ENJvNp1ycSCS2I5EILn/2wN0ty4ZlWwSyoQg2n883j0CbT1OplCyurq6xoOKvrQsCWOt4cvhMxtgI4BkDgQDG47HTWSk82nks3e1Vdzb6rwqYrKiIN/GBsPRW8wtlJd35ixl5JJNJVKvVIf0XpP0/KH+kfCIKHK9sATFgZ3dfuosH9gJGNIx8Po9oNJrweDyYTqd7g8Fgr91uv/C4szkKWDJBlDP70LjEtZoik8lA1/W1bB6ZFVHDhwJYF6sb4xj07tsJzKUp3vR6PQyHQ/T7fVBnuR+s2MPmuLeRJcvxWU5+fe8NQlpYOrJ0PubRaIRgMIhYLCYAMZE3eL1eZ27FrhOAVdEathK4O6rrGX+sjBV8rtfrmEwmMAwDwZBON1ATkFoZ627m36trfQMoFosHnU7neaVSuTg/r0EPaMikHyCV2kY6eZ/tFfmscjabwe/3IxQKCYDH126/xlKpdEj0Y4pd9zFls1nkcjmk0+m1F6yi2+2iVqt91/71nMvlcoCkFymOKO4S2EedfxHkE8Xxb6/5rMKMZgtBAAAAAElFTkSuQmCC",
       "btc_address": "14dvHxKVi6Cqic1dmitcfXUsikr6X7URgt"
@@ -44,7 +44,7 @@
       "id": 5,
       "first_name": "Shea",
       "last_name": "Lansdale",
-      "email": "slansdale4@guardian.co.uk",
+      "email": "slansdale4@guardian.co.usa",
       "gender": "Male",
       "country": "North Korea",
       "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJhSURBVDjLpZNLSBtRFIaVIvFVsKSCG7UuWkVcGIiiGxE3YgUhgvgIirgJiIssspBK6cK0iIgbCyVgNyWGqkiLK63KiG100ZbYQiUP8zBxJuOMyaRJiCHB/j0zC0GsROjiwOVy/u+c/5578gDk/U/kTAicnDwOBoPP/H7/W4/Ho+N5/t6dAU6X63mY5yFJkhIsy8LpdHIOh0OdE/Dt8PAlGw4jk8kgnU4jkUgglUohGo2CAJL94KDwVgBjt7/yh0KKOJlMKtVFUcTZ2ZkC8ni9+LK/b/ongGEYs5sSZLGcLFeUxeRdsSCHeH4OZm8vcgPgsVqnue1tZEgQj8cRiUQUcZisnJ6eIhAIwEtw+X5jZwfXAOGpqenEygqyu7u4mJ1FjGEgCAI4jkOI7NAUcHx8rABpMlhbX3ddATyDgwZpcRFZol7MzCAxMYHfY2MQlpZAI4TP5wONECcklN9hY3MT72y2SgVgr6pSecfHkaXLlNmMOJ1jo6OI9vdD7OlBaG4ObrdbaV8g8fetLaxZLANXY9yoqXniNxqRWV1F3GBAbGQEkb4+iN3d4Ds6wLW2giVLAj3ij+VlHExODlz7SO8rKh4dUbW0xQJJr0ektxdCVxf49nZwzc0QCBCj8JMtZnh44MZXXigtzf9YV/dTNBr/JE0mCJ2dCLe1gdVqIRBAamqCr6UFX+vrdbfuwkJZ2cN9rTYo6vWZ5NAQBALEqYOoRoNfDQ34VF2ty7lM8yUlD6zl5R+OGhslVqO59NbWXn6urMza1Oqnd97GFwUF+fOFhdo3xcWm10VFunmV6n6ubf0LxSvsH2lz/wcAAAAASUVORK5CYII=",
@@ -52,7 +52,7 @@
     },
     {
       "id": 6,
-      "first_name": "Tremaine",
+      "first_name": "Tremain",
       "last_name": "Flannery",
       "email": "tflannery5@ibm.com",
       "gender": "Male",
@@ -1009,16 +1009,6 @@
       "avatar": "asdff",
       "btc_address": "asdfdsf",
       "id": 101
-    },
-    {
-      "first_name": "KIỀU",
-      "last_name": "Khai",
-      "email": "kieuphuockhai@gmail.com",
-      "gender": "male",
-      "country": "Vietnam",
-      "avatar": "asdff",
-      "btc_address": "Nam",
-      "id": 102
     }
   ]
 }

@@ -1,18 +1,20 @@
 import { Fragment, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { getStudent } from "apis/students.api";
+import { getStudents, deleteStudent } from "apis/students.api";
 import { StudentList } from "types/students.type";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { useQueryStrings } from "utils/utils";
 import classNames from "classnames";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const PAGE_LIMIT = 10;
 
 export default function Students() {
     // useEffect(() => {
     //     setIsLoading(true);
-    //     getStudent()
+    //     getStudents()
     //         .then((res) => {
     //             setStudentList(res.data);
     //         })
@@ -24,12 +26,26 @@ export default function Students() {
 
     const { data: studentList, isLoading } = useQuery({
         queryKey: ["student", page],
-        queryFn: () => getStudent(page),
+        queryFn: () => getStudents(page),
         placeholderData: keepPreviousData,
     });
     const totalStudentCount =
         Number(studentList?.headers["x-total-count"]) || 0;
     const totalPages = Math.ceil(totalStudentCount / PAGE_LIMIT);
+
+    const deleteStudentMutation = useMutation({
+        mutationFn: (id: string | number) => deleteStudent(id),
+    })
+
+    const handleDelete = async (id: string | number) => {
+        try {
+            await deleteStudentMutation.mutateAsync(id);
+            toast.success("Deleted successfully");
+        } catch (error) {
+            console.log("[Error]", error);
+            toast.error("Failed to delete student");
+        }
+    }
 
     return (
         <div>
@@ -120,7 +136,9 @@ export default function Students() {
                                             >
                                                 Edit
                                             </Link>
-                                            <button className="font-medium text-red-600 dark:text-red-500">
+                                            <button 
+                                                className="font-medium text-red-600 dark:text-red-500"
+                                                onClick={() => handleDelete(student.id)}>
                                                 Delete
                                             </button>
                                         </td>
